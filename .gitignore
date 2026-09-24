@@ -1,0 +1,5 @@
+frames/
+out/*.wav
+out/*.log
+node_modules/
+.playwright-mcp/
