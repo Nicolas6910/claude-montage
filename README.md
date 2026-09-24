@@ -5,6 +5,8 @@ passe de « il sait juste dire bonjour » à « il s'attaque aux problèmes les 
 
 **→ [Voir l'animation](https://nicolas6910.github.io/claude-montage/)** (cliquer sur *lancer* : le son démarre au clic)
 
+**→ [Télécharger le MP4](https://nicolas6910.github.io/claude-montage/clawd-montage-30s.mp4)** (1920×1080, 60 fps, avec le son, 6,8 Mo)
+
 ## Ce qui est généré en code
 
 Tout. Il n'y a ni image, ni sample audio, ni asset externe dans ce dépôt.
