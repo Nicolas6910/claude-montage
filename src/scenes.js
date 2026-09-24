@@ -7,7 +7,7 @@
   'use strict';
   var c = global.C, P = c.P, W = c.W, H = c.H;
   var rgba = c.rgba, mix = c.mix, rr = c.rr, glow = c.glow;
-  var lerp = c.lerp, inv = c.inv, ease = c.ease, smoother = c.smoother, clamp = c.clamp, hash = c.hash;
+  var lerp = c.lerp, inv = c.inv, ease = c.ease, smoother = c.smoother, clamp = c.clamp, hash = c.hash, frac = c.frac;
 
   var MONO = '"DejaVu Sans Mono", "Noto Sans Mono", monospace';
   var SANS = 'Inter, "Inter Display", "DejaVu Sans", sans-serif';
@@ -210,7 +210,7 @@
     for (var l = 0; l < LINKS.length; l++) {
       var A = pts[LINKS[l][0]], B = pts[LINKS[l][1]];
       if (!A || !B) continue;
-      var ph2 = (lt * 0.55 + l * 0.17) % 1;
+      var ph2 = frac(lt * 0.55 + l * 0.17);
       var alive = Math.sin(Math.PI * ph2);
       var fr = (A[2] + B[2]) / 2;
       ctx.strokeStyle = rgba(P.teal, 0.42 * alive * fr * app);
@@ -280,10 +280,10 @@
     }
     // onde d'absorption sur Clawd
     for (var wv = 0; wv < 3; wv++) {
-      var wk = ((lt * 0.8 + wv / 3) % 1);
+      var wk = frac(lt * 0.8 + wv / 3);
       ctx.strokeStyle = rgba(P.teal, 0.22 * (1 - wk) * ease(6.2, 7.0, t));
       ctx.lineWidth = 1.6;
-      ctx.beginPath(); ctx.arc(tx, ty, 40 + wk * 150, 0, 6.2832); ctx.stroke();
+      ctx.beginPath(); ctx.arc(tx, ty, Math.max(0.01, 40 + wk * 150), 0, 6.2832); ctx.stroke();
     }
   }
 
@@ -692,7 +692,7 @@
     if (prog > 0.01) glow(ctx, lastX, lastY, 42, bend ? P.green : P.red, 0.45 * app);
     // particules de carbone capturees
     for (var q2 = 0; q2 < 22; q2++) {
-      var qk = ((lt * 0.4 + hash(q2 * 3.1)) % 1);
+      var qk = frac(lt * 0.4 + hash(q2 * 3.1));
       var qa2 = Math.sin(Math.PI * qk) * app * ease(21.4, 22.4, t);
       var ang2 = hash(q2 * 7.3) * 6.2832;
       var rad2 = lerp(230, er * 0.9, smoother(qk));
@@ -729,7 +729,7 @@
       ctx.lineWidth = 1.6; ctx.stroke();
       // impulsions qui circulent
       for (var im = 0; im < 3; im++) {
-        var ik = ((lt * 0.7 + im / 3 + th * 0.2) % 1);
+        var ik = frac(lt * 0.7 + im / 3 + th * 0.2);
         var X3 = lerp(hx, T[0], ik), Y3 = lerp(hy, T[1], ik) - Math.sin(Math.PI * ik) * 120;
         ctx.fillStyle = rgba(P.gold, 0.7 * ta * Math.sin(Math.PI * ik));
         ctx.beginPath(); ctx.arc(X3, Y3, 3.4, 0, 6.2832); ctx.fill();

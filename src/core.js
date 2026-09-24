@@ -18,6 +18,7 @@
   function easeOutCubic(x) { x = clamp(x, 0, 1); return 1 - Math.pow(1 - x, 3); }
   function easeOutBack(x) { x = clamp(x, 0, 1); var c = 1.70158; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); }
   // bruit deterministe 1D/2D (hash)
+  function frac(x) { return x - Math.floor(x); }
   function hash(n) { var s = Math.sin(n * 127.1 + 311.7) * 43758.5453; return s - Math.floor(s); }
   function hash2(a, b) { var s = Math.sin(a * 127.1 + b * 311.7) * 43758.5453; return s - Math.floor(s); }
   function vnoise(x) { var i = Math.floor(x), f = x - i; var a = hash(i), b = hash(i + 1); return lerp(a, b, smooth(f)); }
@@ -66,6 +67,7 @@
     ctx.closePath();
   }
   function glow(ctx, x, y, r, color, a) {
+    r = Math.max(0.01, r); a = Math.max(0, a);
     var g = ctx.createRadialGradient(x, y, 0, x, y, r);
     g.addColorStop(0, rgba(color, a));
     g.addColorStop(0.45, rgba(color, a * 0.35));
@@ -372,7 +374,7 @@
       ctx.strokeStyle = P.clawdLo; ctx.lineWidth = Math.max(1.2, u * 0.4);
       ctx.beginPath(); ctx.moveTo(antX, by + 0.5 * u);
       ctx.quadraticCurveTo(antX + u, antTop + u, antX + 0.4 * u, antTop); ctx.stroke();
-      var pulse = (pose.t * 1.35) % 1;
+      var pulse = frac(pose.t * 1.35);
       ctx.fillStyle = mix(P.gold, P.clawdHi, 0.4);
       ctx.beginPath(); ctx.arc(antX + 0.4 * u, antTop, u * 0.62, 0, 6.2832); ctx.fill();
       ctx.strokeStyle = rgba(P.gold, (1 - pulse) * 0.6 * ka);
@@ -392,7 +394,7 @@
       ctx.beginPath(); rr(ctx, x - 6.4 * u, eyeY - 2.1 * u, 12.8 * u, 4.2 * u, u * 0.9); ctx.clip();
       for (var sl = 0; sl < 4; sl++) {
         var sy2 = eyeY - 1.6 * u + sl * 1.1 * u;
-        var off = ((pose.t * 60 + sl * 37) % (14 * u));
+        var off = frac((pose.t * 60 + sl * 37) / (14 * u)) * 14 * u;
         ctx.fillStyle = rgba(P.teal, 0.7);
         ctx.fillRect(x - 6.2 * u + off - 14 * u, sy2, 3.2 * u, Math.max(1, u * 0.3));
         ctx.fillRect(x - 6.2 * u + off - 6 * u, sy2, 1.6 * u, Math.max(1, u * 0.3));
@@ -455,7 +457,7 @@
     W: W, H: H, P: P,
     clamp: clamp, lerp: lerp, inv: inv, smooth: smooth, smoother: smoother, ease: ease,
     easeOutCubic: easeOutCubic, easeOutBack: easeOutBack,
-    hash: hash, hash2: hash2, vnoise: vnoise, trackValue: trackValue,
+    hash: hash, hash2: hash2, frac: frac, vnoise: vnoise, trackValue: trackValue,
     rgba: rgba, mix: mix, rr: rr, glow: glow, textC: textC,
     drawBackdrop: drawBackdrop, drawVignetteGrain: drawVignetteGrain,
     drawClawd: drawClawd, drawClawdGlobal: drawClawdGlobal, clawdPose: clawdPose
