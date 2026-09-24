@@ -244,7 +244,8 @@
       try { state.actx.close(); } catch (e) {}
       return;
     }
-    drawFrame(Math.max(0, t));
+    try { drawFrame(Math.max(0, t)); }
+    catch (err) { if (!state.warned) { state.warned = true; console.warn('image ignoree', t, err); } }
     state.raf = requestAnimationFrame(loop);
   }
 
